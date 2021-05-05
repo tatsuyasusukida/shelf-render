@@ -1,0 +1,54 @@
+doctype html
+html(lang='ja')
+  head
+    meta(charset='utf-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    title オーダーメイド本棚描画システム（デモ）
+  body
+    main
+      h1 オーダーメイド本棚描画システム（デモ）
+      svg(width=image.params.canvasWidth height=image.params.canvasHeight)
+        g(transform=`translate(0 ${image.params.canvasHeight}) scale(1 -1)`)
+          g(transform=`translate(${image.viewport.baseX} ${image.viewport.baseY}) scale(${image.viewport.scale} ${image.viewport.scale})`)
+            g(fill='#000')
+              each back of image.backs
+                rect(x=back.x y=back.y width=back.width height=back.height)
+            g(fill='#888')
+              each dowel of image.dowels
+                rect(x=dowel.x y=dowel.y width=dowel.width height=dowel.height)
+            g(stroke='#000' fill=form.color)
+              each rect of image.rects
+                rect(x=rect.x y=rect.y width=rect.width height=rect.height)
+
+      form(role='form')
+        div
+          label(for='width') W(幅)
+          input(type='number' name='width' id='width' value=form.width)
+        div
+          label(for='height') H(高さ)
+          input(type='number' name='height' id='height' value=form.height)
+        div
+          label(for='depth') D(奥行)
+          input(type='number' name='depth' id='depth' value=form.depth)
+        div
+          label(for='row') 棚板の枚数
+          input(type='number' name='row' id='row' value=form.row)
+        div
+          label(for='thickness') 棚板の厚さ
+          input(type='number' name='thickness' id='thickness' value=form.thickness)
+        div
+          label(for='fix') 棚板の取り付け
+          input(type='text' name='fix' id='fix' value=form.fix list='fixList')
+          datalist(id='fixList')
+            option(value='ビス（固定）')
+            option(value='棚ダボ（可動）')
+        div
+          label(for='back') 背面の有無
+          input(type='text' name='back' id='back' value=form.back list='backList')
+          datalist(id='backList')
+            option(value='あり')
+            option(value='なし')
+        div
+          label(for='color') カラー
+          input(type='color' name='color' id='color' value=form.color)
+        button(type='submit') 描画
