@@ -29,6 +29,7 @@ class App {
 
     this.router.get('/', this.onRequestHome.bind(this))
     this.router.get('/front.svg', this.onRequestFront.bind(this))
+    this.router.get('/side.svg', this.onRequestSide.bind(this))
 
     this.router.use(this.onNotFound.bind(this))
     this.router.use(this.onInternalServerError.bind(this))
@@ -56,13 +57,16 @@ class App {
 
     const {search} = new URL(req.originalUrl, process.env.BASE_URL)
     let imageFront = null
+    let imageSide = null
 
     if (search !== '') {
       imageFront = './front.svg' + search
+      imageSide = './side.svg' + search
     }
 
     res.locals.form = form
     res.locals.imageFront = imageFront
+    res.locals.imageSide = imageSide
 
     res.render('home')
   }
@@ -75,6 +79,19 @@ class App {
 
       res.set('Content-Type', 'image/svg+xml')
       res.render('front')
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  onRequestSide (req, res, next) {
+    try {
+      const image = this.renderer.renderSide(req)
+
+      res.locals.image = image
+
+      res.set('Content-Type', 'image/svg+xml')
+      res.render('side')
     } catch (err) {
       next(err)
     }

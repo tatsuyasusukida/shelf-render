@@ -1,0 +1,9 @@
+svg(xmlns='http://www.w3.org/2000/svg' width=image.params.canvasWidth height=image.params.canvasHeight)
+  g(transform=`translate(0 ${image.params.canvasHeight}) scale(1 -1)`)
+    g(transform=`translate(${image.viewport.baseX} ${image.viewport.baseY}) scale(${image.viewport.scale} ${image.viewport.scale})`)
+      g(stroke='#000' fill=image.color)
+        if image.back
+          rect(x=image.back.x y=image.back.y width=image.back.width height=image.back.height)
+      g(stroke='#000' fill=image.color)
+        if image.frame
+          rect(x=image.frame.x y=image.frame.y width=image.frame.width height=image.frame.height)

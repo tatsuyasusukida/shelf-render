@@ -8,10 +8,17 @@ html(lang='ja')
     main
       h1 オーダーメイド本棚描画システム（デモ）
 
-      if imageFront
-        figure
-          img(src=imageFront alt='正面画像')
-          figcaption 正面画像
+      div(style='display: flex')
+        div(style='flex-grow: 1')
+          if imageFront
+            figure
+              img(src=imageFront alt='正面画像')
+              figcaption 正面画像
+        div(style='flex-grow: 1')
+          if imageSide
+            figure
+              img(src=imageSide alt='側面画像')
+              figcaption 側面画像
 
       form(role='form')
         div
