@@ -1,0 +1,12 @@
+svg(xmlns='http://www.w3.org/2000/svg' width=image.params.canvasWidth height=image.params.canvasHeight)
+  g(transform=`translate(0 ${image.params.canvasHeight}) scale(1 -1)`)
+    g(transform=`translate(${image.viewport.baseX} ${image.viewport.baseY}) scale(${image.viewport.scale} ${image.viewport.scale})`)
+      g(fill='#000')
+        each back of image.backs
+          rect(x=back.x y=back.y width=back.width height=back.height)
+      g(fill='#888')
+        each dowel of image.dowels
+          rect(x=dowel.x y=dowel.y width=dowel.width height=dowel.height)
+      g(stroke='#000' fill=image.color)
+        each rect of image.rects
+          rect(x=rect.x y=rect.y width=rect.width height=rect.height)

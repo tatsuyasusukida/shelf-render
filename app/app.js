@@ -3,9 +3,12 @@ const morgan = require('morgan')
 const winston = require('winston')
 const express = require('express')
 const helmet = require('helmet')
+const {Renderer} = require('./lib/renderer')
 
 class App {
   constructor () {
+    this.renderer = new Renderer()
+
     this.router = express()
 
     this.router.set('strict routing', true)
@@ -25,6 +28,7 @@ class App {
     this.router.use(this.onRequestInitialize.bind(this))
 
     this.router.get('/', this.onRequestHome.bind(this))
+    this.router.get('/front.svg', this.onRequestFront.bind(this))
 
     this.router.use(this.onNotFound.bind(this))
     this.router.use(this.onInternalServerError.bind(this))
@@ -50,119 +54,30 @@ class App {
       color: req.query.color ?? '#c4b295',
     }
 
-    const params = {
-      canvasWidth: 400,
-      canvasHeight: 400,
-      marginWidth: 50,
-      marginHeight: 50,
-      thicknessVertical: 30,
-      thicknessHorizontal: 30,
-      dowelRadius: 8,
-      dowelLength: 8,
+    const {search} = new URL(req.originalUrl, process.env.BASE_URL)
+    let imageFront = null
+
+    if (search !== '') {
+      imageFront = './front.svg' + search
     }
-
-    const width = parseInt(form.width, 10)
-    const height = parseInt(form.height, 10)
-    const depth = parseInt(form.depth, 10)
-    const row = parseInt(form.row, 10)
-
-    const realWidth = params.canvasWidth - 2 * params.marginWidth
-    const realHeight = params.canvasHeight - 2 * params.marginHeight
-    let scale
-
-    if (width > height) {
-      scale = realWidth / width
-    } else {
-      scale = realHeight / height
-    }
-
-    const baseX = params.canvasWidth / 2 - scale * width / 2
-    const baseY = params.canvasHeight / 2 - scale * height / 2
-    const viewport = {scale, baseX, baseY}
-
-    const frameTop = {
-      x: params.thicknessVertical,
-      y: form.height - params.thicknessHorizontal,
-      width: form.width - params.thicknessVertical * 2,
-      height: params.thicknessHorizontal,
-    }
-
-    const frameBottom = {
-      x: params.thicknessVertical,
-      y: 0,
-      width: form.width - params.thicknessVertical * 2,
-      height: params.thicknessHorizontal,
-    }
-
-    const frameLeft = {
-      x: 0,
-      y: 0,
-      width: params.thicknessVertical,
-      height: form.height,
-    }
-
-    const frameRight = {
-      x: form.width - params.thicknessVertical,
-      y: 0,
-      width: params.thicknessVertical,
-      height: form.height,
-    }
-
-    const frames = [frameTop, frameBottom, frameLeft, frameRight]
-    const plates = []
-    const dowels = []
-
-    for (let i = 0; i < row; i += 1) {
-      const x = params.thicknessVertical
-      const y = params.thicknessHorizontal
-        + (i + 1) * (form.height - params.thicknessHorizontal * 2) / (row + 1)
-        - form.thickness / 2
-
-      const width = form.width - params.thicknessVertical * 2
-      const height = form.thickness
-      const plate = {x, y, width, height}
-
-      plates.push(plate)
-
-      if (form.fix === '棚ダボ（可動）') {
-        const dowelLeft = {
-          x: x,
-          y: y - params.dowelRadius / 2,
-          width: params.dowelLength,
-          height: params.dowelRadius / 2,
-        }
-
-        const dowelRight = {
-          x: x + width - params.dowelLength,
-          y: y - params.dowelRadius / 2,
-          width: params.dowelLength,
-          height: params.dowelRadius / 2,
-        }
-
-        dowels.push(dowelLeft)
-        dowels.push(dowelRight)
-      }
-    }
-
-    const rects = [...frames, ...plates]
-    const backs = []
-
-    if (form.back === 'あり') {
-      const x = 0
-      const y = 0
-      const width = form.width
-      const height = form.height
-      const back = {x, y, width, height, backs}
-
-      backs.push(back)
-    }
-
-    const image = {params, viewport, rects, backs, dowels}
 
     res.locals.form = form
-    res.locals.image = image
+    res.locals.imageFront = imageFront
 
     res.render('home')
+  }
+
+  onRequestFront (req, res, next) {
+    try {
+      const image = this.renderer.renderFront(req)
+
+      res.locals.image = image
+
+      res.set('Content-Type', 'image/svg+xml')
+      res.render('front')
+    } catch (err) {
+      next(err)
+    }
   }
 
   onRequestInitialize (req, res, next) {
