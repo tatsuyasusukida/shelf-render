@@ -16,9 +16,9 @@ class Renderer {
   renderFront (req) {
     const params = this.params
     const input = {
-      width: parseInt(req.query.width, 10),
-      height: parseInt(req.query.height, 10),
-      depth: parseInt(req.query.depth, 10),
+      width: parseInt(req.query.width, 10) * 10,
+      height: parseInt(req.query.height, 10) * 10,
+      depth: parseInt(req.query.depth, 10) * 10,
       row: parseInt(req.query.row, 10),
       thickness: parseInt(req.query.thickness, 10),
     }
@@ -114,7 +114,7 @@ class Renderer {
       backs.push(back)
     }
 
-    const color = req.query.color
+    const color = req.query.background
     const image = {params, viewport, rects, backs, dowels, color}
 
     return image
@@ -123,9 +123,9 @@ class Renderer {
   renderSide (req) {
     const params = this.params
     const input = {
-      width: parseInt(req.query.width, 10),
-      height: parseInt(req.query.height, 10),
-      depth: parseInt(req.query.depth, 10),
+      width: parseInt(req.query.width, 10) * 10,
+      height: parseInt(req.query.height, 10) * 10,
+      depth: parseInt(req.query.depth, 10) * 10,
       row: parseInt(req.query.row, 10),
       thickness: parseInt(req.query.thickness, 10),
     }
@@ -162,7 +162,7 @@ class Renderer {
       back = {x, y, width, height}
     }
 
-    const color = req.query.color
+    const color = req.query.background
     const image = {params, viewport, frame, back, color}
 
     return image

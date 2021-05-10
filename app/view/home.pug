@@ -5,6 +5,10 @@ html(lang='ja')
     meta(name='viewport' content='width=device-width, initial-scale=1')
     title オーダーメイド本棚描画システム（デモ）
   body
+    nav(aria-label='パンくずリスト')
+      ol
+        li
+          a(href='./' aria-current='page') ホーム
     main
       h1 オーダーメイド本棚描画システム（デモ）
 
@@ -22,19 +26,19 @@ html(lang='ja')
 
       form(role='form')
         div
-          label(for='width') W(幅)
+          label(for='width') W(幅)[cm]
           input(type='number' name='width' id='width' value=form.width)
         div
-          label(for='height') H(高さ)
+          label(for='height') H(高さ)[cm]
           input(type='number' name='height' id='height' value=form.height)
         div
-          label(for='depth') D(奥行)
+          label(for='depth') D(奥行)[cm]
           input(type='number' name='depth' id='depth' value=form.depth)
         div
           label(for='row') 棚板の枚数
           input(type='number' name='row' id='row' value=form.row)
         div
-          label(for='thickness') 棚板の厚さ
+          label(for='thickness') 棚板の厚さ[mm]
           input(type='number' name='thickness' id='thickness' value=form.thickness)
         div
           label(for='fix') 棚板の取り付け
@@ -49,6 +53,6 @@ html(lang='ja')
             option(value='あり')
             option(value='なし')
         div
-          label(for='color') カラー
-          input(type='color' name='color' id='color' value=form.color)
+          label(for='background') カラー
+          input(type='color' name='background' id='background' value=form.background)
         button(type='submit') 描画

@@ -45,14 +45,14 @@ class App {
 
   onRequestHome (req, res, next) {
     const form = {
-      width: req.query.width ?? '150',
-      height: req.query.height ?? '490',
-      depth: req.query.depth ?? '190',
+      width: req.query.width ?? '15',
+      height: req.query.height ?? '49',
+      depth: req.query.depth ?? '19',
       row: req.query.row ?? '1',
       thickness: req.query.thickness ?? '17',
       fix: req.query.fix ?? 'ビス（固定）',
       back: req.query.back ?? 'なし',
-      color: req.query.color ?? '#c4b295',
+      background: req.query.background ?? '#c4b295',
     }
 
     const {search} = new URL(req.originalUrl, process.env.BASE_URL)
