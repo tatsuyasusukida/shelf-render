@@ -4,7 +4,14 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon -r dotenv/config script/serve.js"
+    "start": "nodemon -r dotenv/config script/serve.js",
+    "activate": "gcloud config configurations activate default",
+    "image": "echo gcr.io/`gcloud config get-value project`/shelf-render:latest",
+    "build": "docker image build -t shelf-render:latest .",
+    "tag": "docker image tag shelf-render:latest `npm run -s image`",
+    "push": "docker image push `npm run -s image`",
+    "deploy": "gcloud run deploy shelf-render --image `npm run -s image` --platform managed --region asia-northeast1",
+    "staging": "npm run activate && npm run build && npm run tag && npm run push && npm run deploy"
   },
   "dependencies": {
     "dotenv": "^8.5.0",
